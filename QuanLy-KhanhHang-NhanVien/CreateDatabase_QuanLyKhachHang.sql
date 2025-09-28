@@ -1,3 +1,5 @@
+``
+````````sql
 -- =============================================
 -- HỆ THỐNG QUẢN LÝ KHÁCH HÀNG
 -- Database: QuanLyKhachHang
@@ -158,7 +160,7 @@ CREATE TABLE HOADONCHITIET (
     SOLUONG INT DEFAULT 1,
     TIENTRUOCGIAM DECIMAL(18,2), -- Tien truoc khi giam
     TIENGIAM DECIMAL(18,2) DEFAULT 0, -- Tien duoc giam
-    THANHTIEN DECIMAL(18,2), -- Tien cuoi cung phai tra
+    THANHTIEN DECIMAL(18,2), -- Tien cuoi cùng phai tra
     PHUONGTHUCTHANHTOAN NVARCHAR(50) DEFAULT 'Tien mat' 
         CHECK (PHUONGTHUCTHANHTOAN IN ('Tien mat', 'Chuyen khoan', 'The', 'Khac')),
     TRANGTHAI NVARCHAR(20) DEFAULT 'Chua thanh toan' 
@@ -338,12 +340,12 @@ GO
 -- THÊM DỮ LIỆU MẪU
 -- =============================================
 
--- Them hang thanh vien
+-- Them hang thanh vien (CAP NHAT MUC DIEM MOI)
 INSERT INTO HANGTHANHVIEN (MAHANG, TENHANG, MOTA, DIEMTOITHIEU, UUDI) VALUES
 ('BRONZE', 'Dong', 'Hang thanh vien co ban', 0, 'Khong co uu dai dac biet'),
-('SILVER', 'Bac', 'Hang thanh vien bac', 75, 'Giam gia 5% cho tat ca san pham'),
-('GOLD', 'Vang', 'Hang thanh vien vang', 150, 'Giam gia 10% + mien phi van chuyen'),
-('DIAMOND', 'Kim cuong', 'Hang thanh vien cao cap nhat', 250, 'Giam gia 15% + uu dai dac biet');
+('SILVER', 'Bac', 'Hang thanh vien bac', 750, 'Giam gia 5% cho tat ca san pham'),
+('GOLD', 'Vang', 'Hang thanh vien vang', 1500, 'Giam gia 10% + mien phi van chuyen'),
+('DIAMOND', 'Kim cuong', 'Hang thanh vien cao cap nhat', 2000, 'Giam gia 15% + uu dai dac biet');
 
 -- Them nguoi dung mau
 INSERT INTO NGUOIDUNG (MAND, HOTEN, NGAYSINH, GIOITINH, EMAIL, SODIENTHOAI, DIACHI, CMND) VALUES
@@ -368,11 +370,11 @@ INSERT INTO NHANVIEN (MAND, MANHANVIEN, CHUCVU, PHONGBAN, NGAYVAOLAM, LUONGCOBAN
 ('NV001', 'NV001', 'Nhan vien tu van', 'Kinh doanh', '2020-01-15', 8000000),
 ('NV002', 'NV002', 'Truong phong', 'Kinh doanh', '2018-06-01', 15000000);
 
--- Thêm khách hàng
+-- Thêm khách hàng (CAP NHAT LAI DIEM DE PHU HOP VOI MUC MOI)
 INSERT INTO KHACHHANG (MAND, MAHANG, MAND_QL, DIEMTICHLUY) VALUES
-('KH001', 'BRONZE', 'NV001', 25),
-('KH002', 'SILVER', 'NV001', 120),
-('KH003', 'GOLD', 'NV002', 200);
+('KH001', 'BRONZE', 'NV001', 250),     -- 250 diem - hang Dong
+('KH002', 'BRONZE', 'NV001', 800),     -- 800 diem - hang Bac  
+('KH003', 'SILVER', 'NV002', 1600);    -- 1600 diem - hang Vang
 
 -- Them cong viec
 INSERT INTO CONGVIEC (MACONGVIEC, MAND_NV, TIEUDECONGVIEC, MOTACONGVIEC, TRANGTHAICONGVIEC, NGAYBATDAU, NGAYHETHAN, UUTIEN) VALUES
@@ -386,12 +388,12 @@ INSERT INTO TUONGTACKHACHHANG (MAND_KH, MAND_NV, NGAYTUONGTAC, HINHTHUC, NOIDUNG
 ('KH002', 'NV001', '2024-01-16 14:20:00', 'Truc tiep', 'Khach hang den cua hang xem san pham', 'Da demo san pham va bao gia', 'Da xu ly'),
 ('KH003', 'NV002', '2024-01-17 10:15:00', 'Email', 'Khach hang yeu cau ho tro ky thuat', 'Da chuyen cho bo phan ky thuat', 'Dang xu ly');
 
--- Them voucher
+-- Them voucher (CAP NHAT MUC DIEM TOI THIEU)
 INSERT INTO VOUCHER (MAVOUCHER, TENVOUCHER, MOTA, GIATRIGIAM, LOAIGIAM, NGAYBATDAU, NGAYKETTHUC, SOLUONG, DIEMTOITHIEU, MAHANG_APDUNG) VALUES
 ('V001', 'Giam gia 10% cho khach hang moi', 'Ap dung cho lan mua dau tien', 10, 'Phan tram', '2024-01-01', '2024-12-31', 100, 0, 'BRONZE'),
-('V002', 'Giam 50,000 VND', 'Voucher giam gia co dinh', 50000, 'Tien mat', '2024-01-01', '2024-06-30', 50, 50, 'SILVER'),
-('V003', 'Giam 15% cho thanh vien vang', 'Danh rieng cho khach hang hang vang', 15, 'Phan tram', '2024-01-01', '2024-12-31', 30, 150, 'GOLD'),
-('V004', 'Mien phi van chuyen', 'Mien phi ship cho don hang tu 500k', 0, 'Tien mat', '2024-01-01', '2024-12-31', 0, 0, NULL);
+('V002', 'Giam 50,000 VND cho thanh vien bac', 'Voucher danh cho thanh vien bac', 50000, 'Tien mat', '2024-01-01', '2024-06-30', 50, 750, 'SILVER'),
+('V003', 'Giam 15% cho thanh vien vang', 'Danh rieng cho khach hang hang vang', 15, 'Phan tram', '2024-01-01', '2024-12-31', 30, 1500, 'GOLD'),
+('V004', 'Giam 20% cho thanh vien kim cuong', 'Voucher cao cap nhat', 20, 'Phan tram', '2024-01-01', '2024-12-31', 20, 2000, 'DIAMOND');
 
 -- Them hoa don chi tiet
 INSERT INTO HOADONCHITIET (MAHD, MAND_KH, NGAYTHANHTOAN, TONGTIEN, MAVOUCHER, SOLUONG, TRANGTHAI, GHICHU) VALUES
@@ -769,6 +771,12 @@ PRINT 'So stored procedure: 5';
 PRINT 'So view: 3';
 PRINT 'So function: 2';
 PRINT 'So trigger: 3';
+PRINT '=============================================';
+PRINT 'HANG THANH VIEN MOI:';
+PRINT '- DONG: 0 diem';
+PRINT '- BAC: 750 diem';
+PRINT '- VANG: 1500 diem'; 
+PRINT '- KIM CUONG: 2000 diem';
 PRINT '=============================================';
 PRINT 'Du lieu mau da duoc them vao cac bang';
 PRINT 'Co the bat dau phat trien ung dung WinForms';

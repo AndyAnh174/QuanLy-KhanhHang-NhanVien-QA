@@ -106,6 +106,15 @@ namespace QuanLy_KhanhHang_NhanVien
             }
         }
 
+        private void btnThemKhachHang_Click(object sender, EventArgs e)
+        {
+            FormThemKhachHang formThem = new FormThemKhachHang();
+            if (formThem.ShowDialog() == DialogResult.OK)
+            {
+                LoadKhachHang();
+            }
+        }
+
         private void btnSuaKhachHang_Click(object sender, EventArgs e)
         {
             if (dgvKhachHang.CurrentRow != null)
@@ -135,9 +144,21 @@ namespace QuanLy_KhanhHang_NhanVien
                 {
                     try
                     {
-                        string query = "UPDATE NGUOIDUNG SET TRANGTHAI = 0 WHERE MAND = @MaND";
-                        var parameters = new[] { new System.Data.SqlClient.SqlParameter("@MaND", maND) };
-                        dataAccess.ExecuteNonQuery(query, parameters);
+                        // Xoa khach hang trong bang KHACHHANG truoc
+                        string deleteKHQuery = "UPDATE KHACHHANG SET TRANGTHAI = 0 WHERE MAND = @MaND";
+                        var parameters1 = new[] { new System.Data.SqlClient.SqlParameter("@MaND", maND) };
+                        dataAccess.ExecuteNonQuery(deleteKHQuery, parameters1);
+
+                        // Sau do xoa tai khoan trong bang TAIKHOAN
+                        string deleteTKQuery = "UPDATE TAIKHOAN SET TRANGTHAI = 0 WHERE MAND = @MaND";
+                        var parameters2 = new[] { new System.Data.SqlClient.SqlParameter("@MaND", maND) };
+                        dataAccess.ExecuteNonQuery(deleteTKQuery, parameters2);
+
+                        // Cuoi cung xoa nguoi dung
+                        string deleteNDQuery = "UPDATE NGUOIDUNG SET TRANGTHAI = 0 WHERE MAND = @MaND";
+                        var parameters3 = new[] { new System.Data.SqlClient.SqlParameter("@MaND", maND) };
+                        dataAccess.ExecuteNonQuery(deleteNDQuery, parameters3);
+
                         MessageBox.Show("Xoa khach hang thanh cong!", "Thong bao", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadKhachHang();
                     }
@@ -163,6 +184,53 @@ namespace QuanLy_KhanhHang_NhanVien
             }
         }
 
+        private void btnSuaVoucher_Click(object sender, EventArgs e)
+        {
+            if (dgvVoucher.CurrentRow != null)
+            {
+                string maVoucher = dgvVoucher.CurrentRow.Cells["MAVOUCHER"].Value.ToString();
+                FormSuaVoucher formSua = new FormSuaVoucher(maVoucher);
+                if (formSua.ShowDialog() == DialogResult.OK)
+                {
+                    LoadVoucher();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui long chon voucher can sua!", "Thong bao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnXoaVoucher_Click(object sender, EventArgs e)
+        {
+            if (dgvVoucher.CurrentRow != null)
+            {
+                string maVoucher = dgvVoucher.CurrentRow.Cells["MAVOUCHER"].Value.ToString();
+                string tenVoucher = dgvVoucher.CurrentRow.Cells["TENVOUCHER"].Value.ToString();
+
+                if (MessageBox.Show($"Ban co chac chan muon xoa voucher {tenVoucher}?", "Xac nhan", 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        string query = "UPDATE VOUCHER SET TRANGTHAI = 0 WHERE MAVOUCHER = @MaVoucher";
+                        var parameters = new[] { new System.Data.SqlClient.SqlParameter("@MaVoucher", maVoucher) };
+                        dataAccess.ExecuteNonQuery(query, parameters);
+                        MessageBox.Show("Xoa voucher thanh cong!", "Thong bao", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadVoucher();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Loi xoa voucher: {ex.Message}", "Loi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui long chon voucher can xoa!", "Thong bao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         // Tab Tuong Tac
         private void btnPhanHoi_Click(object sender, EventArgs e)
         {
@@ -184,9 +252,9 @@ namespace QuanLy_KhanhHang_NhanVien
         private void btnDangXuat_Click(object sender, EventArgs e)
         {
             Session.Clear();
+            this.Hide();
             Form1 loginForm = new Form1();
             loginForm.Show();
-            this.Close();
         }
 
         private void FormNhanVien_FormClosing(object sender, FormClosingEventArgs e)

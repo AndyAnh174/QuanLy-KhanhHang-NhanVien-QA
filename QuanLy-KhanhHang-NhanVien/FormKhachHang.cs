@@ -21,6 +21,7 @@ namespace QuanLy_KhanhHang_NhanVien
             LoadThongTinTaiKhoan();
             LoadLichSuGiaoDich();
             LoadVoucherKhaDung();
+            LoadTinNhanCuaToi();
         }
 
         private void LoadThongTinTaiKhoan()
@@ -79,8 +80,8 @@ namespace QuanLy_KhanhHang_NhanVien
         {
             try
             {
-                string query = @"SELECT hd.MAHD, hd.NGAYTHANHTOAN, hd.THANHTIEN, 
-                                hd.MAVOUCHER, hd.TIENGIAM, hd.TRANGTHAI, hd.GHICHU
+                string query = @"SELECT hd.MAHD, hd.NGAYTHANHTOAN, hd.TIENTRUOCGIAM, hd.TIENGIAM, 
+                                hd.THANHTIEN, hd.MAVOUCHER, hd.TRANGTHAI, hd.GHICHU
                                 FROM HOADONCHITIET hd
                                 WHERE hd.MAND_KH = @MaND
                                 ORDER BY hd.NGAYTHANHTOAN DESC";
@@ -99,22 +100,107 @@ namespace QuanLy_KhanhHang_NhanVien
         {
             try
             {
+                // Lay thong tin khach hang de kiem tra dieu kien voucher
+                string queryKH = @"SELECT k.DIEMTICHLUY, k.MAHANG, h.TENHANG FROM KHACHHANG k
+                                  LEFT JOIN HANGTHANHVIEN h ON k.MAHANG = h.MAHANG  
+                                  WHERE k.MAND = @MaND";
+                var paramKH = new[] { new System.Data.SqlClient.SqlParameter("@MaND", Session.MaND) };
+                DataTable dtKH = dataAccess.ExecuteQuery(queryKH, paramKH);
+                
+                if (dtKH.Rows.Count == 0) return;
+                
+                int diemHienTai = Convert.ToInt32(dtKH.Rows[0]["DIEMTICHLUY"]);
+                string hangHienTai = dtKH.Rows[0]["MAHANG"].ToString();
+                string tenHang = dtKH.Rows[0]["TENHANG"].ToString();
+
+                // Query voucher voi dieu kien kiem tra day du
                 string query = @"SELECT v.MAVOUCHER, v.TENVOUCHER, v.MOTA, v.GIATRIGIAM, 
                                 v.LOAIGIAM, v.NGAYBATDAU, v.NGAYKETTHUC, v.DIEMTOITHIEU,
-                                h.TENHANG as HANG_AP_DUNG
+                                CASE 
+                                    WHEN v.MAHANG_APDUNG IS NULL THEN 'Tat ca hang'
+                                    ELSE h.TENHANG 
+                                END as HANG_AP_DUNG,
+                                (v.SOLUONG - v.DASUDUNG) as CON_LAI,
+                                CASE 
+                                    WHEN v.DIEMTOITHIEU <= @DiemHienTai THEN 'Du diem'
+                                    ELSE 'Thieu ' + CAST((v.DIEMTOITHIEU - @DiemHienTai) AS VARCHAR) + ' diem'
+                                END as TRANG_THAI_DIEM,
+                                CASE 
+                                    WHEN v.MAHANG_APDUNG IS NULL OR v.MAHANG_APDUNG = @HangHienTai THEN 'Phu hop'
+                                    ELSE 'Khong phu hop'
+                                END as TRANG_THAI_HANG
                                 FROM VOUCHER v
                                 LEFT JOIN HANGTHANHVIEN h ON v.MAHANG_APDUNG = h.MAHANG
                                 WHERE v.TRANGTHAI = 1 
                                 AND GETDATE() BETWEEN v.NGAYBATDAU AND v.NGAYKETTHUC
                                 AND (v.DASUDUNG < v.SOLUONG OR v.SOLUONG = 0)
-                                ORDER BY v.NGAYTAO DESC";
+                                AND v.DIEMTOITHIEU <= @DiemHienTai
+                                AND (v.MAHANG_APDUNG IS NULL OR v.MAHANG_APDUNG = @HangHienTai)
+                                ORDER BY v.GIATRIGIAM DESC, v.NGAYTAO DESC";
                 
-                DataTable dt = dataAccess.ExecuteQuery(query);
+                var parameters = new[] { 
+                    new System.Data.SqlClient.SqlParameter("@DiemHienTai", diemHienTai),
+                    new System.Data.SqlClient.SqlParameter("@HangHienTai", hangHienTai)
+                };
+                
+                DataTable dt = dataAccess.ExecuteQuery(query, parameters);
                 dgvVoucher.DataSource = dt;
+                
+                // Thong bao chi tiet cho debug
+                string thongBaoDebug = $"Thong tin voucher:\n";
+                thongBaoDebug += $"- Hang hien tai: {tenHang} ({hangHienTai})\n";
+                thongBaoDebug += $"- Diem hien tai: {diemHienTai}\n";
+                thongBaoDebug += $"- So voucher kha dung: {dt.Rows.Count}";
+                
+                // Hien thi tat ca voucher (ke ca khong dung duoc) cho debug
+                string queryAllVouchers = @"SELECT COUNT(*) as TONG_VOUCHER,
+                                          SUM(CASE WHEN v.DIEMTOITHIEU <= @DiemHienTai THEN 1 ELSE 0 END) as DU_DIEM,
+                                          SUM(CASE WHEN v.MAHANG_APDUNG IS NULL OR v.MAHANG_APDUNG = @HangHienTai THEN 1 ELSE 0 END) as DUNG_HANG,
+                                          SUM(CASE WHEN GETDATE() BETWEEN v.NGAYBATDAU AND v.NGAYKETTHUC THEN 1 ELSE 0 END) as CON_HAN
+                                          FROM VOUCHER v 
+                                          WHERE v.TRANGTHAI = 1";
+                
+                DataTable dtStats = dataAccess.ExecuteQuery(queryAllVouchers, parameters);
+                if (dtStats.Rows.Count > 0)
+                {
+                    DataRow statsRow = dtStats.Rows[0];
+                    thongBaoDebug += $"\n\nThong ke voucher (debug):\n";
+                    thongBaoDebug += $"- Tong voucher: {statsRow["TONG_VOUCHER"]}\n";
+                    thongBaoDebug += $"- Du diem: {statsRow["DU_DIEM"]}\n"; 
+                    thongBaoDebug += $"- Dung hang: {statsRow["DUNG_HANG"]}\n";
+                    thongBaoDebug += $"- Con han: {statsRow["CON_HAN"]}";
+                }
+                
+                if (dt.Rows.Count == 0)
+                {
+                    MessageBox.Show(thongBaoDebug, "Debug Voucher", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Loi tai voucher: {ex.Message}", "Loi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadTinNhanCuaToi()
+        {
+            try
+            {
+                string query = @"SELECT tt.MATT, nv_nd.HOTEN as TEN_NHAN_VIEN, tt.NOIDUNG, 
+                                tt.KETQUA, tt.NGAYTUONGTAC, tt.TRANGTHAI
+                                FROM TUONGTACKHACHHANG tt
+                                INNER JOIN NHANVIEN nv ON tt.MAND_NV = nv.MAND
+                                INNER JOIN NGUOIDUNG nv_nd ON nv.MAND = nv_nd.MAND
+                                WHERE tt.MAND_KH = @MaND
+                                ORDER BY tt.NGAYTUONGTAC DESC";
+                
+                var parameters = new[] { new System.Data.SqlClient.SqlParameter("@MaND", Session.MaND) };
+                DataTable dt = dataAccess.ExecuteQuery(query, parameters);
+                dgvTinNhan.DataSource = dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Loi tai tin nhan: {ex.Message}", "Loi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -134,15 +220,16 @@ namespace QuanLy_KhanhHang_NhanVien
             {
                 MessageBox.Show("Gui tin nhan thanh cong! Nhan vien se phan hoi trong thoi gian som nhat.", 
                                "Thong bao", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadTinNhanCuaToi();
             }
         }
 
         private void btnDangXuat_Click(object sender, EventArgs e)
         {
             Session.Clear();
+            this.Hide();
             Form1 loginForm = new Form1();
             loginForm.Show();
-            this.Close();
         }
 
         private void FormKhachHang_FormClosing(object sender, FormClosingEventArgs e)

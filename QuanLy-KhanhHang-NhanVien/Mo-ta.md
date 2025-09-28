@@ -61,15 +61,16 @@ Khi đăng nhập, tùy vào account nhân viên hay khách hàng sẽ hiển th
 - ✅ Xem hạng thành viên
 
 ### 🏆 **Hệ thống tích lũy điểm**
-- ✅ **Quy đổi:** 0.001% giá trị hóa đơn thành điểm
-- ✅ **Ví dụ:** hóa đơn 5.000.000 VND tích lũy được 50 điểm
+- ✅ **Quy đổi:** 0.1% giá trị hóa đơn thành điểm
+- ✅ **Ví dụ:** hóa đơn 5.000.000 VND tích lũy được 500 điểm
 
-#### **Các mức hạng thành viên:**
-| Điểm | Hạng |
-|------|------|
-| 75 điểm | 🥈 Bạc |
-| 150 điểm | 🥇 Vàng |
-| 250 điểm | 💎 Kim cương |
+#### **Các mức hạng thành viên (ĐÃ CẬP NHẬT):**
+| Điểm | Hạng | Ưu đãi |
+|------|------|---------|
+| 0 điểm | 🥉 Đồng | Không có ưu đãi đặc biệt |
+| 750 điểm | 🥈 Bạc | Giảm giá 5% cho tất cả sản phẩm |
+| 1500 điểm | 🥇 Vàng | Giảm giá 10% + miễn phí vận chuyển |
+| 2000 điểm | 💎 Kim cương | Giảm giá 15% + ưu đãi đặc biệt |
 
 - ✅ Khách hàng sẽ biết mình đang ở hạng nào và cần thêm bao nhiêu điểm để lên hạng tiếp theo
 
@@ -81,3 +82,8 @@ Khi đăng nhập, tùy vào account nhân viên hay khách hàng sẽ hiển th
 
 ## 🎯 **TỔNG KẾT**
 Hệ thống cung cấp đầy đủ chức năng cho cả nhân viên và khách hàng với giao diện phân quyền rõ ràng, đảm bảo trải nghiệm người dùng tối ưu.
+
+### 📈 **Lưu ý về điểm tích lũy:**
+- **Tỷ lệ tích điểm**: 0.1% (1 triệu VND = 100 điểm)
+- **Mức điểm đã được tăng** để tạo động lực mua sắm lâu dài
+- **Hạng cao hơn** = **Ưu đãi tốt hơn** = **Khuyến khích khách hàng trung thành**

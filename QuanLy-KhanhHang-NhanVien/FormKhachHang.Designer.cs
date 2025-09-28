@@ -7,6 +7,7 @@ namespace QuanLy_KhanhHang_NhanVien
         private TabPage tabThongTin;
         private TabPage tabLichSu;
         private TabPage tabVoucher;
+        private TabPage tabTinNhan;
         
         // Tab Thong Tin
         private GroupBox groupThongTin;
@@ -28,6 +29,9 @@ namespace QuanLy_KhanhHang_NhanVien
         // Tab Voucher
         private DataGridView dgvVoucher;
         
+        // Tab Tin Nhan
+        private DataGridView dgvTinNhan;
+        
         private Button btnDangXuat;
 
         protected override void Dispose(bool disposing)
@@ -45,6 +49,7 @@ namespace QuanLy_KhanhHang_NhanVien
             this.tabThongTin = new TabPage();
             this.tabLichSu = new TabPage();
             this.tabVoucher = new TabPage();
+            this.tabTinNhan = new TabPage();
             
             this.groupThongTin = new GroupBox();
             this.lblHoTen = new Label();
@@ -61,6 +66,7 @@ namespace QuanLy_KhanhHang_NhanVien
             
             this.dgvLichSuGiaoDich = new DataGridView();
             this.dgvVoucher = new DataGridView();
+            this.dgvTinNhan = new DataGridView();
             
             this.btnDangXuat = new Button();
 
@@ -68,15 +74,18 @@ namespace QuanLy_KhanhHang_NhanVien
             this.tabThongTin.SuspendLayout();
             this.tabLichSu.SuspendLayout();
             this.tabVoucher.SuspendLayout();
+            this.tabTinNhan.SuspendLayout();
             this.groupThongTin.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLichSuGiaoDich)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVoucher)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTinNhan)).BeginInit();
             this.SuspendLayout();
 
             // tabControl1
             this.tabControl1.Controls.Add(this.tabThongTin);
             this.tabControl1.Controls.Add(this.tabLichSu);
             this.tabControl1.Controls.Add(this.tabVoucher);
+            this.tabControl1.Controls.Add(this.tabTinNhan);
             this.tabControl1.Location = new Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -264,13 +273,37 @@ namespace QuanLy_KhanhHang_NhanVien
             this.dgvVoucher.Size = new Size(940, 460);
             this.dgvVoucher.TabIndex = 0;
 
+            // tabTinNhan
+            this.tabTinNhan.Controls.Add(this.dgvTinNhan);
+            this.tabTinNhan.Location = new Point(4, 24);
+            this.tabTinNhan.Name = "tabTinNhan";
+            this.tabTinNhan.Size = new Size(952, 472);
+            this.tabTinNhan.TabIndex = 3;
+            this.tabTinNhan.Text = "Tin nhan va phan hoi";
+            this.tabTinNhan.UseVisualStyleBackColor = true;
+
+            // dgvTinNhan
+            this.dgvTinNhan.AllowUserToAddRows = false;
+            this.dgvTinNhan.AllowUserToDeleteRows = false;
+            this.dgvTinNhan.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvTinNhan.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvTinNhan.Location = new Point(6, 6);
+            this.dgvTinNhan.MultiSelect = false;
+            this.dgvTinNhan.Name = "dgvTinNhan";
+            this.dgvTinNhan.ReadOnly = true;
+            this.dgvTinNhan.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.dgvTinNhan.Size = new Size(940, 460);
+            this.dgvTinNhan.TabIndex = 0;
+
             // btnDangXuat
+            this.btnDangXuat.BackColor = Color.Gray;
+            this.btnDangXuat.ForeColor = Color.White;
             this.btnDangXuat.Location = new Point(897, 530);
             this.btnDangXuat.Name = "btnDangXuat";
             this.btnDangXuat.Size = new Size(75, 25);
             this.btnDangXuat.TabIndex = 1;
             this.btnDangXuat.Text = "Dang xuat";
-            this.btnDangXuat.UseVisualStyleBackColor = true;
+            this.btnDangXuat.UseVisualStyleBackColor = false;
             this.btnDangXuat.Click += new EventHandler(this.btnDangXuat_Click);
 
             // FormKhachHang
@@ -288,10 +321,12 @@ namespace QuanLy_KhanhHang_NhanVien
             this.tabThongTin.ResumeLayout(false);
             this.tabLichSu.ResumeLayout(false);
             this.tabVoucher.ResumeLayout(false);
+            this.tabTinNhan.ResumeLayout(false);
             this.groupThongTin.ResumeLayout(false);
             this.groupThongTin.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLichSuGiaoDich)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVoucher)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTinNhan)).EndInit();
             this.ResumeLayout(false);
         }
     }

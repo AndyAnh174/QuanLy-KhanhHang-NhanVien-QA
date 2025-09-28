@@ -23,7 +23,13 @@ public class DataAccess
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 if (parameters != null)
-                    cmd.Parameters.AddRange(parameters);
+                {
+                    // Tao ban sao cua parameters de tranh loi reuse
+                    foreach (var param in parameters)
+                    {
+                        cmd.Parameters.Add(new SqlParameter(param.ParameterName, param.Value ?? DBNull.Value));
+                    }
+                }
 
                 using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {
@@ -43,7 +49,13 @@ public class DataAccess
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 if (parameters != null)
-                    cmd.Parameters.AddRange(parameters);
+                {
+                    // Tao ban sao cua parameters de tranh loi reuse
+                    foreach (var param in parameters)
+                    {
+                        cmd.Parameters.Add(new SqlParameter(param.ParameterName, param.Value ?? DBNull.Value));
+                    }
+                }
 
                 return cmd.ExecuteNonQuery();
             }
@@ -58,58 +70,64 @@ public class DataAccess
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 if (parameters != null)
-                    cmd.Parameters.AddRange(parameters);
+                {
+                    // Tao ban sao cua parameters de tranh loi reuse
+                    foreach (var param in parameters)
+                    {
+                        cmd.Parameters.Add(new SqlParameter(param.ParameterName, param.Value ?? DBNull.Value));
+                    }
+                }
 
                 return cmd.ExecuteScalar();
             }
         }
     }
 
-    // Dang nhap
+    // Dang nhap - Tao parameters moi moi lan goi
     public DataTable DangNhap(string tenDangNhap, string matKhau)
     {
         string query = "EXEC SP_DangNhap @TenDangNhap, @MatKhau";
-        SqlParameter[] parameters = {
-            new SqlParameter("@TenDangNhap", tenDangNhap),
-            new SqlParameter("@MatKhau", matKhau)
+        var parameters = new[] {
+            new SqlParameter("@TenDangNhap", tenDangNhap ?? ""),
+            new SqlParameter("@MatKhau", matKhau ?? "")
         };
         return ExecuteQuery(query, parameters);
     }
 
-    // Tim kiem khach hang
+    // Tim kiem khach hang - Tao parameters moi moi lan goi
     public DataTable TimKiemKhachHang(string keyword = null, string maHang = null, string mandQL = null)
     {
         string query = "EXEC SP_TimKiemKhachHang @Keyword, @Mahang, @Mand_QL";
-        SqlParameter[] parameters = {
-            new SqlParameter("@Keyword", (object)keyword ?? DBNull.Value),
-            new SqlParameter("@Mahang", (object)maHang ?? DBNull.Value),
-            new SqlParameter("@Mand_QL", (object)mandQL ?? DBNull.Value)
+        var parameters = new[] {
+            new SqlParameter("@Keyword", keyword ?? (object)DBNull.Value),
+            new SqlParameter("@Mahang", maHang ?? (object)DBNull.Value),
+            new SqlParameter("@Mand_QL", mandQL ?? (object)DBNull.Value)
         };
         return ExecuteQuery(query, parameters);
     }
 
-    // Tao hoa don
+    // Tao hoa don - Tao parameters moi moi lan goi
     public string TaoHoaDon(string maHD, string mandKH, decimal tongTien, string maVoucher = null, int soLuong = 1, string ghiChu = null)
     {
         string query = "EXEC SP_TaoHoaDon @Mahd, @Mand_KH, @Tongtien, @Mavoucher, @Soluong, @Ghichu";
-        SqlParameter[] parameters = {
-            new SqlParameter("@Mahd", maHD),
-            new SqlParameter("@Mand_KH", mandKH),
+        var parameters = new[] {
+            new SqlParameter("@Mahd", maHD ?? ""),
+            new SqlParameter("@Mand_KH", mandKH ?? ""),
             new SqlParameter("@Tongtien", tongTien),
-            new SqlParameter("@Mavoucher", (object)maVoucher ?? DBNull.Value),
+            new SqlParameter("@Mavoucher", maVoucher ?? (object)DBNull.Value),
             new SqlParameter("@Soluong", soLuong),
-            new SqlParameter("@Ghichu", (object)ghiChu ?? DBNull.Value)
+            new SqlParameter("@Ghichu", ghiChu ?? (object)DBNull.Value)
         };
         
         DataTable result = ExecuteQuery(query, parameters);
         return result.Rows.Count > 0 ? result.Rows[0]["KETQUA"].ToString() : "";
     }
 
-    // Bao cao doanh thu
+    // Bao cao doanh thu - Tao parameters moi moi lan goi
     public DataTable BaoCaoDoanhThu(DateTime ngayBatDau, DateTime ngayKetThuc)
     {
         string query = "EXEC SP_BaoCaoDoanhThu @NgayBatDau, @NgayKetThuc";
-        SqlParameter[] parameters = {
+        var parameters = new[] {
             new SqlParameter("@NgayBatDau", ngayBatDau),
             new SqlParameter("@NgayKetThuc", ngayKetThuc)
         };

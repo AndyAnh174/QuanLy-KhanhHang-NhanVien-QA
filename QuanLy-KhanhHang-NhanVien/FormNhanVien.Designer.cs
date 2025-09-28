@@ -13,12 +13,15 @@ namespace QuanLy_KhanhHang_NhanVien
         private DataGridView dgvKhachHang;
         private TextBox txtTimKiem;
         private Button btnTimKiem;
+        private Button btnThemKhachHang;
         private Button btnSuaKhachHang;
         private Button btnXoaKhachHang;
         
         // Tab Voucher
         private DataGridView dgvVoucher;
         private Button btnThemVoucher;
+        private Button btnSuaVoucher;
+        private Button btnXoaVoucher;
         
         // Tab Giao Dich
         private DataGridView dgvGiaoDich;
@@ -50,12 +53,15 @@ namespace QuanLy_KhanhHang_NhanVien
             this.dgvKhachHang = new DataGridView();
             this.txtTimKiem = new TextBox();
             this.btnTimKiem = new Button();
+            this.btnThemKhachHang = new Button();
             this.btnSuaKhachHang = new Button();
             this.btnXoaKhachHang = new Button();
             
             // Voucher tab controls
             this.dgvVoucher = new DataGridView();
             this.btnThemVoucher = new Button();
+            this.btnSuaVoucher = new Button();
+            this.btnXoaVoucher = new Button();
             
             // Giao Dich tab controls
             this.dgvGiaoDich = new DataGridView();
@@ -91,6 +97,7 @@ namespace QuanLy_KhanhHang_NhanVien
             // tabKhachHang
             this.tabKhachHang.Controls.Add(this.btnXoaKhachHang);
             this.tabKhachHang.Controls.Add(this.btnSuaKhachHang);
+            this.tabKhachHang.Controls.Add(this.btnThemKhachHang);
             this.tabKhachHang.Controls.Add(this.btnTimKiem);
             this.tabKhachHang.Controls.Add(this.txtTimKiem);
             this.tabKhachHang.Controls.Add(this.dgvKhachHang);
@@ -118,22 +125,37 @@ namespace QuanLy_KhanhHang_NhanVien
             this.btnTimKiem.UseVisualStyleBackColor = true;
             this.btnTimKiem.Click += new EventHandler(this.btnTimKiem_Click);
 
+            // btnThemKhachHang
+            this.btnThemKhachHang.BackColor = Color.Green;
+            this.btnThemKhachHang.ForeColor = Color.White;
+            this.btnThemKhachHang.Location = new Point(410, 14);
+            this.btnThemKhachHang.Name = "btnThemKhachHang";
+            this.btnThemKhachHang.Size = new Size(75, 25);
+            this.btnThemKhachHang.TabIndex = 2;
+            this.btnThemKhachHang.Text = "Them";
+            this.btnThemKhachHang.UseVisualStyleBackColor = false;
+            this.btnThemKhachHang.Click += new EventHandler(this.btnThemKhachHang_Click);
+
             // btnSuaKhachHang
-            this.btnSuaKhachHang.Location = new Point(410, 14);
+            this.btnSuaKhachHang.BackColor = Color.Blue;
+            this.btnSuaKhachHang.ForeColor = Color.White;
+            this.btnSuaKhachHang.Location = new Point(500, 14);
             this.btnSuaKhachHang.Name = "btnSuaKhachHang";
             this.btnSuaKhachHang.Size = new Size(75, 25);
-            this.btnSuaKhachHang.TabIndex = 2;
+            this.btnSuaKhachHang.TabIndex = 3;
             this.btnSuaKhachHang.Text = "Sua";
-            this.btnSuaKhachHang.UseVisualStyleBackColor = true;
+            this.btnSuaKhachHang.UseVisualStyleBackColor = false;
             this.btnSuaKhachHang.Click += new EventHandler(this.btnSuaKhachHang_Click);
 
             // btnXoaKhachHang
-            this.btnXoaKhachHang.Location = new Point(500, 14);
+            this.btnXoaKhachHang.BackColor = Color.Red;
+            this.btnXoaKhachHang.ForeColor = Color.White;
+            this.btnXoaKhachHang.Location = new Point(590, 14);
             this.btnXoaKhachHang.Name = "btnXoaKhachHang";
             this.btnXoaKhachHang.Size = new Size(75, 25);
-            this.btnXoaKhachHang.TabIndex = 3;
+            this.btnXoaKhachHang.TabIndex = 4;
             this.btnXoaKhachHang.Text = "Xoa";
-            this.btnXoaKhachHang.UseVisualStyleBackColor = true;
+            this.btnXoaKhachHang.UseVisualStyleBackColor = false;
             this.btnXoaKhachHang.Click += new EventHandler(this.btnXoaKhachHang_Click);
 
             // dgvKhachHang
@@ -147,9 +169,11 @@ namespace QuanLy_KhanhHang_NhanVien
             this.dgvKhachHang.ReadOnly = true;
             this.dgvKhachHang.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvKhachHang.Size = new Size(940, 416);
-            this.dgvKhachHang.TabIndex = 4;
+            this.dgvKhachHang.TabIndex = 5;
 
             // tabVoucher
+            this.tabVoucher.Controls.Add(this.btnXoaVoucher);
+            this.tabVoucher.Controls.Add(this.btnSuaVoucher);
             this.tabVoucher.Controls.Add(this.btnThemVoucher);
             this.tabVoucher.Controls.Add(this.dgvVoucher);
             this.tabVoucher.Location = new Point(4, 24);
@@ -161,13 +185,37 @@ namespace QuanLy_KhanhHang_NhanVien
             this.tabVoucher.UseVisualStyleBackColor = true;
 
             // btnThemVoucher
+            this.btnThemVoucher.BackColor = Color.Green;
+            this.btnThemVoucher.ForeColor = Color.White;
             this.btnThemVoucher.Location = new Point(6, 15);
             this.btnThemVoucher.Name = "btnThemVoucher";
             this.btnThemVoucher.Size = new Size(100, 25);
             this.btnThemVoucher.TabIndex = 0;
             this.btnThemVoucher.Text = "Them voucher";
-            this.btnThemVoucher.UseVisualStyleBackColor = true;
+            this.btnThemVoucher.UseVisualStyleBackColor = false;
             this.btnThemVoucher.Click += new EventHandler(this.btnThemVoucher_Click);
+
+            // btnSuaVoucher
+            this.btnSuaVoucher.BackColor = Color.Blue;
+            this.btnSuaVoucher.ForeColor = Color.White;
+            this.btnSuaVoucher.Location = new Point(120, 15);
+            this.btnSuaVoucher.Name = "btnSuaVoucher";
+            this.btnSuaVoucher.Size = new Size(75, 25);
+            this.btnSuaVoucher.TabIndex = 1;
+            this.btnSuaVoucher.Text = "Sua";
+            this.btnSuaVoucher.UseVisualStyleBackColor = false;
+            this.btnSuaVoucher.Click += new EventHandler(this.btnSuaVoucher_Click);
+
+            // btnXoaVoucher
+            this.btnXoaVoucher.BackColor = Color.Red;
+            this.btnXoaVoucher.ForeColor = Color.White;
+            this.btnXoaVoucher.Location = new Point(210, 15);
+            this.btnXoaVoucher.Name = "btnXoaVoucher";
+            this.btnXoaVoucher.Size = new Size(75, 25);
+            this.btnXoaVoucher.TabIndex = 2;
+            this.btnXoaVoucher.Text = "Xoa";
+            this.btnXoaVoucher.UseVisualStyleBackColor = false;
+            this.btnXoaVoucher.Click += new EventHandler(this.btnXoaVoucher_Click);
 
             // dgvVoucher
             this.dgvVoucher.AllowUserToAddRows = false;
@@ -180,7 +228,7 @@ namespace QuanLy_KhanhHang_NhanVien
             this.dgvVoucher.ReadOnly = true;
             this.dgvVoucher.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvVoucher.Size = new Size(940, 416);
-            this.dgvVoucher.TabIndex = 1;
+            this.dgvVoucher.TabIndex = 3;
 
             // tabGiaoDich
             this.tabGiaoDich.Controls.Add(this.dgvGiaoDich);
@@ -215,12 +263,14 @@ namespace QuanLy_KhanhHang_NhanVien
             this.tabTuongTac.UseVisualStyleBackColor = true;
 
             // btnPhanHoi
+            this.btnPhanHoi.BackColor = Color.Orange;
+            this.btnPhanHoi.ForeColor = Color.White;
             this.btnPhanHoi.Location = new Point(6, 15);
             this.btnPhanHoi.Name = "btnPhanHoi";
             this.btnPhanHoi.Size = new Size(75, 25);
             this.btnPhanHoi.TabIndex = 0;
             this.btnPhanHoi.Text = "Phan hoi";
-            this.btnPhanHoi.UseVisualStyleBackColor = true;
+            this.btnPhanHoi.UseVisualStyleBackColor = false;
             this.btnPhanHoi.Click += new EventHandler(this.btnPhanHoi_Click);
 
             // dgvTuongTac
@@ -237,12 +287,14 @@ namespace QuanLy_KhanhHang_NhanVien
             this.dgvTuongTac.TabIndex = 1;
 
             // btnDangXuat
+            this.btnDangXuat.BackColor = Color.Gray;
+            this.btnDangXuat.ForeColor = Color.White;
             this.btnDangXuat.Location = new Point(897, 530);
             this.btnDangXuat.Name = "btnDangXuat";
             this.btnDangXuat.Size = new Size(75, 25);
             this.btnDangXuat.TabIndex = 1;
             this.btnDangXuat.Text = "Dang xuat";
-            this.btnDangXuat.UseVisualStyleBackColor = true;
+            this.btnDangXuat.UseVisualStyleBackColor = false;
             this.btnDangXuat.Click += new EventHandler(this.btnDangXuat_Click);
 
             // FormNhanVien
