@@ -90,7 +90,7 @@ namespace QuanLy_KhanhHang_NhanVien
             this.lblEmail.AutoSize = true;
             this.lblEmail.Location = new Point(20, y);
             this.lblEmail.Size = new Size(50, 15);
-            this.lblEmail.Text = "Email:";
+            this.lblEmail.Text = "Email *:";
             this.txtEmail.Location = new Point(150, y - 3);
             this.txtEmail.Size = new Size(200, 23);
             y += spacing;

@@ -94,16 +94,61 @@ public class DataAccess
         return ExecuteQuery(query, parameters);
     }
 
-    // Tim kiem khach hang - Tao parameters moi moi lan goi
+    // Tim kiem khach hang - FIX: Sử dụng query trực tiếp thay vì SP để đảm bảo chỉ lấy TRANGTHAI = 1
     public DataTable TimKiemKhachHang(string keyword = null, string maHang = null, string mandQL = null)
     {
-        string query = "EXEC SP_TimKiemKhachHang @Keyword, @Mahang, @Mand_QL";
-        var parameters = new[] {
-            new SqlParameter("@Keyword", keyword ?? (object)DBNull.Value),
-            new SqlParameter("@Mahang", maHang ?? (object)DBNull.Value),
-            new SqlParameter("@Mand_QL", mandQL ?? (object)DBNull.Value)
-        };
-        return ExecuteQuery(query, parameters);
+        string query = @"SELECT 
+            k.MAND,
+            n.HOTEN,
+            n.EMAIL,
+            n.SODIENTHOAI,
+            n.DIACHI,
+            h.TENHANG,
+            nv_nd.HOTEN AS TEN_QUANLY,
+            k.DIEMTICHLUY,
+            k.NGAYDANGKY,
+            k.TRANGTHAI
+        FROM KHACHHANG k
+        INNER JOIN NGUOIDUNG n ON k.MAND = n.MAND
+        LEFT JOIN HANGTHANHVIEN h ON k.MAHANG = h.MAHANG
+        LEFT JOIN NHANVIEN nv ON k.MAND_QL = nv.MAND
+        LEFT JOIN NGUOIDUNG nv_nd ON nv.MAND = nv_nd.MAND
+        WHERE k.TRANGTHAI = 1 AND n.TRANGTHAI = 1";
+        
+        // Thêm điều kiện tìm kiếm nếu có
+        if (!string.IsNullOrEmpty(keyword))
+        {
+            query += " AND (n.HOTEN LIKE @Keyword OR n.EMAIL LIKE @Keyword OR n.SODIENTHOAI LIKE @Keyword)";
+        }
+        
+        if (!string.IsNullOrEmpty(maHang))
+        {
+            query += " AND k.MAHANG = @Mahang";
+        }
+        
+        if (!string.IsNullOrEmpty(mandQL))
+        {
+            query += " AND k.MAND_QL = @Mand_QL";
+        }
+        
+        query += " ORDER BY n.HOTEN";
+        
+        var parameters = new List<SqlParameter>();
+        
+        if (!string.IsNullOrEmpty(keyword))
+        {
+            parameters.Add(new SqlParameter("@Keyword", "%" + keyword + "%"));
+        }
+        if (!string.IsNullOrEmpty(maHang))
+        {
+            parameters.Add(new SqlParameter("@Mahang", maHang));
+        }
+        if (!string.IsNullOrEmpty(mandQL))
+        {
+            parameters.Add(new SqlParameter("@Mand_QL", mandQL));
+        }
+        
+        return ExecuteQuery(query, parameters.ToArray());
     }
 
     // Tao hoa don - Tao parameters moi moi lan goi

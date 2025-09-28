@@ -46,25 +46,25 @@ namespace QuanLy_KhanhHang_NhanVien
 
                 string gioiTinh = rdoNam.Checked ? "Nam" : (rdoNu.Checked ? "Nu" : "Khac");
 
-                // Them nguoi dung
-                string insertND = @"INSERT INTO NGUOIDUNG (MAND, HOTEN, NGAYSINH, GIOITINH, EMAIL, SODIENTHOAI, DIACHI, CMND)
-                                   VALUES (@MaND, @HoTen, @NgaySinh, @GioiTinh, @Email, @SoDienThoai, @DiaChi, @CMND)";
+                // Them nguoi dung - FIX: Them TRANGTHAI = 1
+                string insertND = @"INSERT INTO NGUOIDUNG (MAND, HOTEN, NGAYSINH, GIOITINH, EMAIL, SODIENTHOAI, DIACHI, CMND, TRANGTHAI)
+                                   VALUES (@MaND, @HoTen, @NgaySinh, @GioiTinh, @Email, @SoDienThoai, @DiaChi, @CMND, 1)";
                 
                 var ndParams = new[] {
                     new System.Data.SqlClient.SqlParameter("@MaND", txtMaND.Text),
                     new System.Data.SqlClient.SqlParameter("@HoTen", txtHoTen.Text),
                     new System.Data.SqlClient.SqlParameter("@NgaySinh", dtpNgaySinh.Value),
                     new System.Data.SqlClient.SqlParameter("@GioiTinh", gioiTinh),
-                    new System.Data.SqlClient.SqlParameter("@Email", txtEmail.Text),
+                    new System.Data.SqlClient.SqlParameter("@Email", txtEmail.Text ?? ""),
                     new System.Data.SqlClient.SqlParameter("@SoDienThoai", txtSoDienThoai.Text),
-                    new System.Data.SqlClient.SqlParameter("@DiaChi", txtDiaChi.Text),
-                    new System.Data.SqlClient.SqlParameter("@CMND", txtCMND.Text)
+                    new System.Data.SqlClient.SqlParameter("@DiaChi", txtDiaChi.Text ?? ""),
+                    new System.Data.SqlClient.SqlParameter("@CMND", txtCMND.Text ?? "")
                 };
                 dataAccess.ExecuteNonQuery(insertND, ndParams);
 
-                // Them tai khoan
-                string insertTK = @"INSERT INTO TAIKHOAN (MAND, TENDANGNHAP, MATKHAU, VAITRO)
-                                   VALUES (@MaND, @TenDangNhap, @MatKhau, 'KHACHHANG')";
+                // Them tai khoan - FIX: Them TRANGTHAI = 1
+                string insertTK = @"INSERT INTO TAIKHOAN (MAND, TENDANGNHAP, MATKHAU, VAITRO, TRANGTHAI)
+                                   VALUES (@MaND, @TenDangNhap, @MatKhau, 'KHACHHANG', 1)";
                 
                 var tkParams = new[] {
                     new System.Data.SqlClient.SqlParameter("@MaND", txtMaND.Text),
@@ -73,9 +73,9 @@ namespace QuanLy_KhanhHang_NhanVien
                 };
                 dataAccess.ExecuteNonQuery(insertTK, tkParams);
 
-                // Them khach hang
-                string insertKH = @"INSERT INTO KHACHHANG (MAND, MAHANG, MAND_QL, DIEMTICHLUY)
-                                   VALUES (@MaND, 'BRONZE', @MaNVQL, 0)";
+                // Them khach hang - FIX: Them TRANGTHAI = 1
+                string insertKH = @"INSERT INTO KHACHHANG (MAND, MAHANG, MAND_QL, DIEMTICHLUY, TRANGTHAI)
+                                   VALUES (@MaND, 'BRONZE', @MaNVQL, 0, 1)";
                 
                 var khParams = new[] {
                     new System.Data.SqlClient.SqlParameter("@MaND", txtMaND.Text),

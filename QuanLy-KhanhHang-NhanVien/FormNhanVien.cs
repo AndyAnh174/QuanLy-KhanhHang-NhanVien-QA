@@ -30,6 +30,12 @@ namespace QuanLy_KhanhHang_NhanVien
             {
                 DataTable dt = dataAccess.TimKiemKhachHang();
                 dgvKhachHang.DataSource = dt;
+                
+                // FIX: ?n c?t TRANGTHAI kh?i DataGridView
+                if (dgvKhachHang.Columns.Contains("TRANGTHAI"))
+                {
+                    dgvKhachHang.Columns["TRANGTHAI"].Visible = false;
+                }
             }
             catch (Exception ex)
             {
@@ -44,6 +50,20 @@ namespace QuanLy_KhanhHang_NhanVien
                 string query = "SELECT * FROM VOUCHER WHERE TRANGTHAI = 1 ORDER BY NGAYTAO DESC";
                 DataTable dt = dataAccess.ExecuteQuery(query);
                 dgvVoucher.DataSource = dt;
+                
+                // FIX: ?n c?t TRANGTHAI kh?i DataGridView voucher n?u c?n
+                if (dgvVoucher.Columns.Contains("TRANGTHAI"))
+                {
+                    dgvVoucher.Columns["TRANGTHAI"].Visible = false;
+                }
+                if (dgvVoucher.Columns.Contains("DASUDUNG"))
+                {
+                    dgvVoucher.Columns["DASUDUNG"].HeaderText = "?ã s? d?ng";
+                }
+                if (dgvVoucher.Columns.Contains("SOLUONG"))
+                {
+                    dgvVoucher.Columns["SOLUONG"].HeaderText = "T?ng s? l??ng";
+                }
             }
             catch (Exception ex)
             {
@@ -81,6 +101,7 @@ namespace QuanLy_KhanhHang_NhanVien
                                 FROM TUONGTACKHACHHANG tt
                                 INNER JOIN KHACHHANG kh ON tt.MAND_KH = kh.MAND
                                 INNER JOIN NGUOIDUNG kh_nd ON kh.MAND = kh_nd.MAND
+                                WHERE kh.TRANGTHAI = 1
                                 ORDER BY tt.NGAYTUONGTAC DESC";
                 DataTable dt = dataAccess.ExecuteQuery(query);
                 dgvTuongTac.DataSource = dt;
@@ -99,6 +120,12 @@ namespace QuanLy_KhanhHang_NhanVien
                 string keyword = txtTimKiem.Text.Trim();
                 DataTable dt = dataAccess.TimKiemKhachHang(string.IsNullOrEmpty(keyword) ? null : keyword);
                 dgvKhachHang.DataSource = dt;
+                
+                // FIX: ?n c?t TRANGTHAI sau khi tìm ki?m
+                if (dgvKhachHang.Columns.Contains("TRANGTHAI"))
+                {
+                    dgvKhachHang.Columns["TRANGTHAI"].Visible = false;
+                }
             }
             catch (Exception ex)
             {
@@ -154,7 +181,7 @@ namespace QuanLy_KhanhHang_NhanVien
                         var parameters2 = new[] { new System.Data.SqlClient.SqlParameter("@MaND", maND) };
                         dataAccess.ExecuteNonQuery(deleteTKQuery, parameters2);
 
-                        // Cuoi cung xoa nguoi dung
+                        // Cuoi cùng xoa nguoi dung
                         string deleteNDQuery = "UPDATE NGUOIDUNG SET TRANGTHAI = 0 WHERE MAND = @MaND";
                         var parameters3 = new[] { new System.Data.SqlClient.SqlParameter("@MaND", maND) };
                         dataAccess.ExecuteNonQuery(deleteNDQuery, parameters3);
